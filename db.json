@@ -1,0 +1,19 @@
+{
+    "posts": [
+        {
+            "id": "1",
+            "title": "Anandh's interiew",
+            "body": "Discussing the future of tech"
+        },
+        {
+            "id": "2",
+            "title": "Review Tesla",
+            "body": "Tesla's latest EV review"
+        },
+        {
+            "id": "3",
+            "title": "AI in 2025",
+            "body": "Impact on daily life"
+        }
+    ]
+}
