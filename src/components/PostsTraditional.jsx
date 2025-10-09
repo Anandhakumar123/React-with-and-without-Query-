@@ -11,6 +11,7 @@ const PostsTraditional = () => {
       const response = await axios.get("http://localhost:4000/posts");
       setPosts(response.data);
     } catch (error) {
+      console.error("Error fetching posts:", error);
       setIsError(true);
     } finally {
       setIsLoading(false);
