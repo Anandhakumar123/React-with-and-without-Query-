@@ -1,6 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const PostsTraditional = () => {
   const [posts, setPosts] = useState([]);
