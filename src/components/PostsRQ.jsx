@@ -59,7 +59,7 @@ const PostsRQ = () => {
           value={title}
         />
         <input
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setBody(e.target.value)}
           placeholder="Enter post body"
           value={body}
         />
