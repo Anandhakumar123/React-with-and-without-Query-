@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -21,6 +21,8 @@ const PostsRQ = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
+  const queryClient = useQueryClient();
+
   const { data, isLoading, isError, error, isFetching, refetch } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchposts,
@@ -28,6 +30,16 @@ const PostsRQ = () => {
 
   const { mutate } = useMutation({
     mutationFn: addPost,
+    onSuccess: (newData) => {
+      // Invalidate and refetch
+      // queryClient.invalidateQueries("posts");
+      queryClient.setQueryData(["posts"], (oldData) => {
+        return {
+          ...oldData,
+          data: [...oldData.data, newData.data],
+        };
+      });
+    },
   });
 
   const handleSubmit = (e) => {
