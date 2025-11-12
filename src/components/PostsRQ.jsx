@@ -30,15 +30,39 @@ const PostsRQ = () => {
 
   const { mutate } = useMutation({
     mutationFn: addPost,
-    onSuccess: (newData) => {
-      // Invalidate and refetch
-      // queryClient.invalidateQueries("posts");
+    // onSuccess: (newData) => {
+    // Invalidate and refetch
+    // queryClient.invalidateQueries("posts");
+    //--------------------------------------------
+    // queryClient.setQueryData(["posts"], (oldData) => {
+    //   return {
+    //     ...oldData,
+    //     data: [...oldData.data, newData.data],
+    //   };
+    // });
+    //--------------------------------------------
+    // },
+    onMutate: async (newPost) => {
+      await queryClient.cancelQueries(["posts"]);
+      const previousPostData = queryClient.getQueryData(["posts"]);
       queryClient.setQueryData(["posts"], (oldData) => {
         return {
           ...oldData,
-          data: [...oldData.data, newData.data],
+          data: [
+            ...oldData.data,
+            { ...newPost, id: String(oldData?.data?.length + 1) },
+          ],
         };
       });
+      return { previousPostData };
+    },
+    onError: (error, newPost, context) => {
+      console.log("Error occurred:", error);
+      console.log("Context:", context);
+      queryClient.setQueryData(["posts"], context.previousPostData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries("posts");
     },
   });
 
