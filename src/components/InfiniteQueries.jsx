@@ -1,9 +1,12 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 
 const fetchFruits = ({ pageParam = 1 }) => {
-  return axios.get(`http://localhost:4000/fruits/?_limit=4&_page=${pageParam}`);
+  return axios.get(
+    `http://localhost:4000/fruits/?_limit=10&_page=${pageParam}`
+  );
 };
 
 const InfiniteQueries = () => {
@@ -27,6 +30,14 @@ const InfiniteQueries = () => {
     },
   });
 
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, inView]);
+
   if (isLoading) {
     return <div>Page is Loading...</div>;
   }
@@ -45,7 +56,7 @@ const InfiniteQueries = () => {
         ))
       )}
 
-      <div style={{ marginTop: 16 }}>
+      {/* <div style={{ marginTop: 16 }}>
         <button
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
@@ -56,6 +67,10 @@ const InfiniteQueries = () => {
             ? "Load More"
             : "No more"}
         </button>
+      </div> */}
+
+      <div ref={ref} style={{ height: 20, backgroundColor: "transparent" }}>
+        {isFetchingNextPage && "loading..."}
       </div>
     </div>
   );
